@@ -1,0 +1,20 @@
+<?= $this->extend('layouts/affan') ?>
+<?= $this->section('content') ?>
+<div class="page-content-wrapper py-3"><div class="container">
+<div class="d-flex justify-content-between align-items-start mb-3"><div><h5 class="mb-1">Buat User</h5><small class="text-muted">Buat akun baru dan tentukan role serta cakupan aksesnya.</small></div><a href="<?= base_url('super-admin/users') ?>" class="btn btn-outline-primary btn-sm rounded-pill px-3"><i class="bi bi-arrow-left me-1"></i>Kembali</a></div>
+<?php if($m=session()->getFlashdata('error')): ?><div class="alert alert-danger border-0 shadow-sm rounded-4"><?= esc($m) ?></div><?php endif; ?>
+<div class="card border-0 shadow-sm rounded-4"><div class="card-body p-3 p-md-4"><form method="post" action="<?= base_url('super-admin/users/store') ?>" novalidate><?= csrf_field() ?>
+<div class="row g-3">
+<div class="col-md-6"><label class="form-label fw-semibold">Nama Lengkap <span class="text-danger">*</span></label><input name="full_name" value="<?= old('full_name') ?>" class="form-control rounded-3" maxlength="100" required></div>
+<div class="col-md-6"><label class="form-label fw-semibold">Username <span class="text-danger">*</span></label><input name="username" value="<?= old('username') ?>" class="form-control rounded-3" maxlength="50" minlength="3" required></div>
+<div class="col-md-6"><label class="form-label fw-semibold">Email <span class="text-danger">*</span></label><input name="email" value="<?= old('email') ?>" type="email" class="form-control rounded-3" maxlength="100" required></div>
+<div class="col-md-6"><label class="form-label fw-semibold">Password Awal <span class="text-danger">*</span></label><input name="password" type="password" class="form-control rounded-3" minlength="8" required><div class="form-text">Minimal 8 karakter.</div></div>
+<div class="col-md-6"><label class="form-label fw-semibold">Role <span class="text-danger">*</span></label><select name="user_level" id="user_level" class="form-select rounded-3" required><option value="">Pilih Role</option><?php foreach($levels as $level): ?><option value="<?= esc($level) ?>" <?= old('user_level')===$level?'selected':'' ?>><?= esc(ucwords(str_replace('_',' ',$level))) ?></option><?php endforeach; ?></select></div>
+<div class="col-md-6" id="sppgWrap"><label class="form-label fw-semibold">SPPG</label><select name="id_sppg" class="form-select rounded-3"><option value="">Pilih SPPG</option><?php foreach($sppgs as $s): ?><option value="<?= esc($s['id_sppg']) ?>" <?= old('id_sppg')===$s['id_sppg']?'selected':'' ?>><?= esc($s['sppg_name']) ?> (<?= esc($s['id_sppg']) ?>)</option><?php endforeach; ?></select></div>
+<div class="col-md-6" id="koperasiWrap"><label class="form-label fw-semibold">Koperasi</label><select name="koperasi_id" class="form-select rounded-3"><option value="">Pilih Koperasi</option><?php foreach($koperasis as $k): ?><option value="<?= $k['id'] ?>" <?= old('koperasi_id')==(string)$k['id']?'selected':'' ?>><?= esc($k['nama_koperasi']) ?> (<?= esc($k['kode_koperasi']) ?>)</option><?php endforeach; ?></select></div>
+<div class="col-12"><div class="alert alert-info border-0 rounded-4 mb-0"><i class="bi bi-info-circle me-1"></i>Admin dan Super Admin tidak terikat SPPG. Role Kepala, Gizi, Keuangan, dan Aslap wajib memilih satu SPPG. Role Koperasi terhubung ke satu Master Koperasi yang dapat menangani beberapa SPPG.</div></div>
+<div class="col-12 d-flex justify-content-end gap-2 pt-2"><a href="<?= base_url('super-admin/users') ?>" class="btn btn-light rounded-pill px-4">Batal</a><button class="btn btn-primary rounded-pill px-4"><i class="bi bi-check-lg me-1"></i>Simpan User</button></div>
+</div></form></div></div>
+</div></div>
+<script>function sync(){const v=document.getElementById('user_level').value;document.getElementById('sppgWrap').style.display=['kepala','gizi','keuangan','aslap'].includes(v)?'block':'none';document.getElementById('koperasiWrap').style.display=v==='koperasi'?'block':'none';}document.getElementById('user_level').addEventListener('change',sync);sync();</script>
+<?= $this->endSection() ?>
